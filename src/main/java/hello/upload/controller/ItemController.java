@@ -66,7 +66,7 @@ public class ItemController {
     @GetMapping("/images/{filename}")
     public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
         // "file:C:/Users/chaer/study/file/uuid 파일명"
-        // 해당경로에 있는 파일에 실제로 접근하여 파일을 스트림으로 반환
+        // 해당경로에 있는 파일에 실제로 접근하여 파일을 스트림으로 반환 (바이너리 데이터를 웹브라우저에 전송)
         // ※ 해당방법은 사실 보안에 취약하기 때문에 체크로직 넣는 것이 좋음
         return new UrlResource("file:" + fileStore.getFullPath(filename));
     }
@@ -84,6 +84,7 @@ public class ItemController {
 
         // 파일명이 한글이면 깨지기 때문에 인코딩해줘야 함(실제로 난 에러발생했었음)
         String encodedUploadFileName = UriUtils.encode(uploadFileName, StandardCharsets.UTF_8);
+        // 얘가 헤더에 있어야 다운로드가 됨
         String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
